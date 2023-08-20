@@ -10,6 +10,8 @@
     "postbuild": "next-sitemap"
   },
   "dependencies": {
+    "@bnb-chain/greenfield-chain-sdk": "^0.2.2-alpha.18",
+    "@bnb-chain/greenfield-contracts-sdk": "^0.0.7",
     "@coinbase/wallet-sdk": "^3.4.0",
     "@fluencelabs/aqua": "^0.7.4-338",
     "@fluencelabs/aqua-lib": "^0.5.2",

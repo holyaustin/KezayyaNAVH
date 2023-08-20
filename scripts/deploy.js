@@ -2,6 +2,10 @@ const hre = require("hardhat");
 const fs = require('fs');
 
 async function main() {
+  const [deployer] = await ethers.getSigners();
+  console.log("Deploying contracts with the account:", deployer.address);
+  console.log("Account balance:", (await deployer.getBalance()).toString());
+
   const FileNFT = await hre.ethers.getContractFactory("FileNFT");
   const fileShare = await FileNFT.deploy();
   await fileShare.deployed();

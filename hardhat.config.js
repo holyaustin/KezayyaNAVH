@@ -1,5 +1,8 @@
 require("@nomiclabs/hardhat-waffle");
 require('dotenv').config();
+const INFURA_API_KEY  = process.env.INFURA_API_KEY;
+
+console.log('INFURA_API_KEY', INFURA_API_KEY);
 
 module.exports = {
   defaultNetwork: "hardhat",
@@ -7,14 +10,15 @@ module.exports = {
     hardhat: {
       chainId: 1337
     },
-   
-    testnet: {
-      url: process.env.OPBNB_RPC_TESTNET, // https://opbnb-testnet-rpc.bnbchain.org
+
+// https://linea-goerli.infura.io/v3/6267301a0e4f45bba53da68906ecfd7c
+    linea: {
+      url: `https://linea-goerli.infura.io/v3/${INFURA_API_KEY}`,
       accounts: [process.env.PRIVATE_KEY],
     },
-
-    mainnet: {
-      url: process.env.OPBNB_RPC_MAINNET, // https://opbnb-mainnet-rpc.bnbchain.org
+// https://linea-mainnet.infura.io/v3/6267301a0e4f45bba53da68906ecfd7c
+    linea_mainnnet: {
+      url: `https://linea-goerli.infura.io/v3/${INFURA_API_KEY}`,
       accounts: [process.env.PRIVATE_KEY],
     },
 
