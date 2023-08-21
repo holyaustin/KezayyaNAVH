@@ -8,7 +8,7 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Introduction
 
-Kezayya-123 is a web3 project with the aim of helping users store files and share them in a user-friendly manner. Decentralized file storage and sharing system. This project intends to build a web3 version of google drive or dropbox for file storage and sharing. It uses the open zeppelin ERC721 standard to store file metadata ERI in an EVM-based smart contract. The smart contract is deployed on opBNB. opBNB which is an Ethereum scaling and POS Blockchain was the best choice for deployment to reduce the cost of transactions and interaction with the blockchain.
+Kezayya is a web3 project with the aim of helping users store files and share them in a user-friendly manner. Decentralized file storage and sharing system. This project intends to build a web3 version of google drive or dropbox for file storage and sharing. It uses the open zeppelin ERC721 standard to store file metadata ERI in an EVM-based smart contract. The smart contract is deployed on opBNB. opBNB which is an Ethereum scaling and POS Blockchain was the best choice for deployment to reduce the cost of transactions and interaction with the blockchain.
 
 ## Web 3.0 technologies Used
 
@@ -41,6 +41,15 @@ Deployed to Linea Goerli Testnet:
 
  Youtube video link: <https://youtu.be/4E6aEwCBU0o>
 
+ Video 3 mins - https://youtu.be/-8mAF9cSo4c
+
+ ## List of Consensys Products Used 
+Infura, IPFS, Linea
+
+## List of Partner Technology Used
+
+XMTP
+
 ## Getting Started
 
 First, run the development server:
@@ -69,3 +78,31 @@ You can start editing the page by modifying `pages/index.js`. The page auto-upda
 E-mail - <holyaustin@yahoo.com>
 
 stay connected on twitter @holyaustin
+
+# Submission Description NAVH
+
+## Name and summary of the project
+Kezaya : This project was made using several technologies. The front-end was designed using a server-side-rendering javascript tech known as NextJS. the latest version of Next was used because of how fast it was to build the project.  Infurs IPFS Storage was used to store user's file on their decentralized storage. Files can be stored individually and as a folder. When Files are stored on IPFS through Infura, It is retrieved and rendered on users dashboard whenever they are logged in. They can share these files to anyone through a sharing mechansism that is easy to copy out the sharing Link URL.
+
+## Names/pseudonyms of team members and contact information (e.g. GitHub handle, email address, etc)
+holyaustin -  Sole developer - https://github.com/holyaustin - holyaustin@yahoo.com
+
+## The Bounty submitted for
+Make a Dapp That Slaps, No Cap
+
+## An overview of what problem is being addressed (i.e. target industry and pain points addressed)
+Many web2 caompanies handle file storage and sharing but the problem is that these company house these files all by themselves. Company policies, government policies or disaster at storage site can make these files to disapper. 
+Decentralized Storage solves this issue through having files stored in multiple locations at thesame time thus, making the files availble for retrival even if there is  achallenge is one storage location.
+
+## Future plans for the project
+Improve the Onboarding process, analystic integration and billing of higher quota. improve the UI/UX also.
+
+## A list of tech stack (solutions, technology infrastructure, technology services, etc.) used by the team to build your project
+Frontend: NextJS, postcss, tailwindcss, Theme
+web3 technologies: Infura IPFS, Metamask wallet, Infura RPC, XMTP and Fluence
+Backend: Solidity, Node.js
+
+Blockchain deployed to:  Linea Goerli Testnet
+
+## (if required) Log-in credentials for dummy account to access your project demo/prototype
+None.
