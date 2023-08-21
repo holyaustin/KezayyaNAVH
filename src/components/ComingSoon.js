@@ -60,17 +60,17 @@ export default function ComingSoon() {
     const items = await Promise.all(data.map(async i => {
       const tokenUri = await contract.tokenURI(i.tokenId);
       console.log("token Uri is ", tokenUri);
-      const httpUri = getIPFSGatewayURL(tokenUri);
+      const httpUri = tokenUri;
       console.log("Http Uri is ", httpUri);
       const meta = await axios.get(httpUri);
       // const privatefile = (i.filePrivate).toString; 
 
       const item = {
         tokenId: i.tokenId.toNumber(),
-        image: getIPFSGatewayURL(meta.data.image),
+        image: meta.data.image,
         name: meta.data.name,
         description: meta.data.description,
-        sharelink: getIPFSGatewayURL(meta.data.image),
+        sharelink: meta.data.image,
       };
       console.log("item returned is ", item);
       return item;
