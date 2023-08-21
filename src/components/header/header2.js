@@ -74,8 +74,8 @@ export default function Header() {
           <Link href="/fileshare">
           <a>P2P FileShare </a>
           </Link>
-          <Link href="https://web3chat-kezayya.vercel.app/" target="_blank">
-          <a>Chat </a>
+          <Link href="https://web3chat-kezayya.vercel.app/" rel="noopener noreferrer" target="_blank">
+          <a target="_blank" rel="noopener noreferrer"> Chat </a>
           </Link>
           <Link href="/analytics">
           <a>Analytics</a>

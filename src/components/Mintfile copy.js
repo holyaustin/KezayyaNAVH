@@ -3,39 +3,22 @@
 
 import React, { useState } from "react";
 import { jsx, Box } from 'theme-ui';
-//import { NFTStorage } from "nft.storage";
+import { NFTStorage } from "nft.storage";
 import { useRouter } from 'next/router'
 import { ethers } from "ethers";
 import Web3Modal from "web3modal";
-import { create } from 'ipfs-http-client'
+import axios from 'axios'
+import { rgba } from 'polished';
+import { Wallet, providers } from "ethers";
+
 import 'dotenv/config';
 import fileNFT from "../../artifacts/contracts/kezayya.sol/FileNFT.json";
 import { fileShareAddress } from "../../config";
-
-//const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0') 
-// https://kezayya.infura-ipfs.io
-
-const projectId = process.env.NEXT_PUBLIC_INFURA_IPFS_PROJECT_ID
-console.log("projectId is", projectId)
-const projectSecret = process.env.NEXT_PUBLIC_INFURA_IPFS_PROJECT_SECRET
-console.log("projectSecret is", projectSecret)
-const projectIdAndSecret = `${projectId}:${projectSecret}`
-console.log("projectIdAndSecret is", projectIdAndSecret)
-const auth = `Basic ${Buffer.from(projectIdAndSecret).toString('base64')}`
-console.log("auth is", auth)
-
-const client = create({
-  host: 'ipfs.infura.io',
-  port: 5001,
-  protocol: 'https',
-  headers: {
-      authorization: auth,
-  },
-})
+// const APIKEY = [process.env.NFT_STORAGE_API_KEY];
+const APIKEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDA4Zjc4ODAwMkUzZDAwNEIxMDI3NTFGMUQ0OTJlNmI1NjNFODE3NmMiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY1MzA1NjE4NzM4MCwibmFtZSI6InBlbnNpb25maSJ9.agI-2V-FeK_eVRAZ-T6KGGfE9ltWrTUQ7brFzzYVwdM";
 
 const MintFile = () => {
   const navigate = useRouter();
-  const [fileUrl, setFileUrl] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null);
   const [uploadedFile, setUploadedFile] = useState();
   const [imageView, setImageView] = useState();
@@ -44,57 +27,40 @@ const MintFile = () => {
   const [txStatus, setTxStatus] = useState();
   const [formInput, updateFormInput] = useState({ name: "" });
 
-  const handleFileUpload = async (event) => {
+  const handleFileUpload = (event) => {
     console.log("file for upload selected...");
     setUploadedFile(event.target.files[0]);
-    const file = event.target.files[0]
-    try {
-      const added = await client.add(
-        file,
-        {
-          progress: (prog) => console.log(`received: ${prog}`)
-        }
-      )
-      const url = `https://kezayya.infura-ipfs.io/ipfs/${added.path}`
-      setFileUrl(url)
-    } catch (error) {
-      console.log('Error uploading file: ', error)
-    } 
     setTxStatus("");
     setImageView("");
     setMetaDataURl("");
     setTxURL("");
-    setErrorMessage("");
   };
 
   const uploadNFTContent = async (inputFile) => {
     const { name } = formInput;
     if (!name || !inputFile) return;
-        /* first, stringify data */
-        const data = JSON.stringify({
-          name, image: fileUrl
-        })
-    
+    const nftStorage = new NFTStorage({ token: APIKEY, });
     try {
       console.log("Trying to upload file to ipfs");
-      setTxStatus("Uploading Item to IPFS via Infura API.");
+      setTxStatus("Uploading Item to IPFS & Filecoin via NFT.storage.");
       console.log("close to metadata");
-      
-      const added = await client.add(data)
-      const metaData = `https://kezayya.infura-ipfs.io/ipfs/${added.path}`
-      /* after file is uploaded to IPFS, return the URL to use it in the transaction */
-      setMetaDataURl(metaData);
+      const metaData = await nftStorage.store({
+        name,
+        description: name,
+        image: inputFile,
+      });
+      setMetaDataURl(metaData.url);
       console.log("metadata is: ", { metaData });
       return metaData;
     } catch (error) {
-      setErrorMessage("Could store file to IPFS - Aborted file upload.");
+      setErrorMessage("Could store file to NFT.Storage - Aborted file upload.");
       console.log("Error Uploading Content", error);
     }
   };
 
   const sendTxToBlockchain = async (metadata) => {
     try {
-      setTxStatus("Adding transaction to Linea Chain ..");
+      setTxStatus("Adding transaction to BitTorrent Chain (BTTC)..");
       const web3Modal = new Web3Modal();
       const connection = await web3Modal.connect();
       const provider = new ethers.providers.Web3Provider(connection);
@@ -103,16 +69,14 @@ const MintFile = () => {
 
       const connectedContract = new ethers.Contract(fileShareAddress, fileNFT.abi, provider.getSigner());
       console.log("Connected to contract", fileShareAddress);
-      console.log("IPFS blockchain uri is ", metadata);
+      console.log("IPFS blockchain uri is ", metadata.url);
 
-      const mintNFTTx = await connectedContract.createFile(metadata);
+      const mintNFTTx = await connectedContract.createFile(metadata.url);
       console.log("File successfully created and added to Blockchain");
       await mintNFTTx.wait();
-      setTxURL(`https://explorer.goerli.linea.build/tx/${mintNFTTx.hash}`);
-      setTxStatus("File addition was successfully!");
       return mintNFTTx;
     } catch (error) {
-      setErrorMessage("Failed to send tx to BlockChain .");
+      setErrorMessage("Failed to send tx to BitTorrent Chain (BTTC).");
       console.log(error);
     }
   };
@@ -123,19 +87,21 @@ const MintFile = () => {
     console.log("image ipfs path is", imgViewString);
     setImageView(imgViewString);
     setMetaDataURl(getIPFSGatewayURL(metaData.url));
+    setTxURL(`https://testnet.bttcscan.com/tx/${mintNFTTx.hash}`);
+    setTxStatus("File addition was successfully!");
     console.log("File preview completed");
   };
 
   const mintNFTFile = async (e, uploadedFile) => {
     e.preventDefault();
-    // 1. upload File content via Infura Client
+    // 1. upload File content via NFT.storage
     const metaData = await uploadNFTContent(uploadedFile);
 
-    // 2. Mint a File token on Linea Chain
+    // 2. Mint a NFT token on BTTC Chain
     const mintNFTTx = await sendTxToBlockchain(metaData);
 
     // 3. preview the minted nft
-   //previewNFT(metaData, mintNFTTx);
+   previewNFT(metaData, mintNFTTx);
 
     //4. Mint Reward
     // mintReward();
@@ -186,6 +152,8 @@ const MintFile = () => {
               title="File"
               src={imageView}
               alt="File preview"
+              frameBorder="0"
+              scrolling="auto"
               height="50%"
               width="100%"
             />

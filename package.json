@@ -46,6 +46,7 @@
     "format-number": "^3.0.0",
     "framer-motion": "^2.9.1",
     "hardhat": "^2.8.0",
+    "ipfs-http-client": "^60.0.1",
     "jest-puppeteer": "^6.1.1",
     "next": "^12.2.2",
     "next-compose-plugins": "^2.2.0",

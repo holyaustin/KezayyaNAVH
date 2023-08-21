@@ -10,9 +10,10 @@ import Web3Modal from "web3modal";
 import { rgba } from 'polished';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
-
+//import logo from '../../favicon.ico';
 import fileNFT from "../../artifacts/contracts/kezayya.sol/FileNFT.json";
 import { fileShareAddress } from "../../config";
+// cont thumbnail = logo
 
 export default function ViewFiles() {
   const navigate = useRouter();
@@ -35,6 +36,7 @@ export default function ViewFiles() {
     const signer = provider.getSigner();
     const contract = new ethers.Contract(fileShareAddress, fileNFT.abi, signer);
     const data = await contract.fetchMyFiles();
+    console.log("data fetched", data);
     /*
     *  map over items returned from smart contract and format
     *  them as well as fetch their token metadata
@@ -42,17 +44,15 @@ export default function ViewFiles() {
     const items = await Promise.all(data.map(async i => {
       const tokenUri = await contract.tokenURI(i.tokenId);
       console.log("token Uri is ", tokenUri);
-      const httpUri = getIPFSGatewayURL(tokenUri);
-      console.log("Http Uri is ", httpUri);
-      const meta = await axios.get(httpUri);
+      const meta = await axios.get(tokenUri);
       // const privatefile = (i.filePrivate).toString; 
 
       const item = {
         tokenId: i.tokenId.toNumber(),
-        image: getIPFSGatewayURL(meta.data.image),
+        image: meta.data.image,
         name: meta.data.name,
         description: meta.data.description,
-        sharelink: getIPFSGatewayURL(meta.data.image),
+        sharelink: meta.data.image,
       };
       console.log("item returned is ", item);
       
@@ -121,12 +121,14 @@ export default function ViewFiles() {
                 title="fileNFT"
                 height="auto"
                 width="100%"
-                objectfit="cover"
-                src={`${nft.image}#toolbar=0&embedded=true`}
-                className="py-3 object-cover h-500"
+                objectfit="fill"
+                style={{objectFit: "fill"}}
+                //src={`${nft.image}#toolbar=0&embedded=true`}
+                src={`/favicon.ico`}
+               className="py-3 object-fill h-500 w-full"
               />
               <div className="p-1">
-                <p style={{ height: "34px" }} className="text-xl text-purple-700 font-semibold">Name: {nft.name}</p>
+                <p style={{ height: "64px" }} className="text-xl text-purple-700 font-semibold">Name: {nft.name}</p>
                 <p className="text-xl font-bold text-black">Public : {nft.privatefile}</p>
               </div>
               {/** onClick={() => share(nft)} */}
